@@ -2,28 +2,24 @@ import streamlit as st
 import tempfile
 import os
 from datetime import date
-from cosco_neur.cosco_parser import extract_ocean_rates, extract_us_inland
-from cosco_neur.excel_writer import update_cheatsheet
+from cosco_parser import extract_ocean_rates, extract_us_inland
+from excel_writer import update_cheatsheet
 
 st.title("COSCO NEUR to USA Rate Updater")
 
 st.markdown("#### 🔧 What this tool does")
 st.markdown("""
-- 📄 Extracts **Ocean Freight rates** from COSCO NEUR PDF (Rotterdam / Antwerp / Bremerhaven / Hamburg → USA)
+- 📄 Extracts **Ocean Freight rates** from COSCO NEUR PDF 
 - ✍️ Updates **OFT 20DV / 40DV/40HQ** in the cheatsheet
-- 🚂 Updates **US inland 20DV / 40DV/40HQ (/ 40RF/40RQ)** rates from the Location table
-  — this table isn't in every PDF; if it's missing, the US inland tab is left untouched
-""")
+- 🚂 If the PDF includes US inland rates, also extracts and updates
+  **US inland 20DV / 40DV/40HQ (/ 40RF/40RQ)** — otherwise this step is
+  skipped
 
 st.markdown("#### ⚠️ Important Notes")
 st.markdown("""
 - If a PDF has **new or removed** POL/POD lanes, remember to add/delete the
   corresponding row in the cheatsheet, and add the matching pair to the **Mapping**
   tab with the **exact** POL/POD spelling as it appears in the PDF extraction
-- US inland rows are matched by **Location (city name) + Routing via** — if a PDF
-  adds/removes a rail ramp location, add/delete the matching row in the
-  **US inland** tab first. If the Location matches but the Routing via doesn't, the
-  row is **not** updated and is flagged for you to check instead
 """)
 
 st.markdown("<br>", unsafe_allow_html=True)
